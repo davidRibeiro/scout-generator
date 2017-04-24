@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Scout Generator</title>
+  <!-- Picnic.css -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/picnicss/6.3.2/picnic.min.css">
+  <!-- Angular.js -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <!-- App script -->
+</head>
+
+<body ng-app="scoutApp">
+  <main ng-controller="MainCtrl" class="container">
+
+    <table class="" ng-show="results.length">
+      <tbody>
+        <tr ng-repeat="result in results">
+          <td>{{result.playerType}}</td>
+          <td>{{result.country}}</td>
+          <td>{{result.duration}} months</td>
+          <td>{{$index}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div ng-hide="results.length">
+      <span>No items found</span>
+    </div>
+
+    <button ng-click="randomizeScout()" type="button" name="button">Randomize Scout</button>
+
+  </main>
+  <script src="./scripts/app.js" charset="utf-8"></script>
+
+</body>
+
+</html>
