@@ -1,4 +1,4 @@
-var scoutApp = angular.module('scoutApp', []);
+var scoutApp = angular.module('scoutApp', ['ngCookies']);
 scoutApp.constant('playerTypes', {
   types: ['Any',
     'Attacker',
@@ -13,8 +13,8 @@ scoutApp.constant('playerTypes', {
 scoutApp.constant('duration', {
   types: [3, 6, 9]
 });
-scoutApp.constant('countries', {
-  continents: [{
+scoutApp.constant('regions', {
+  regions: [{
       name: 'Asia',
       countries: ['China PR', 'Japan', 'Korea Republic', 'Saudi Arabia']
     },
@@ -43,7 +43,7 @@ scoutApp.constant('countries', {
       countries: ['Argentina', 'Bolivia', 'Brazil', 'Chile', 'Colombia', 'Ecuador', 'Paraguay', 'Peru', 'Uruguay', 'Venezuela']
     },
     {
-      name: 'Oceania',
+      name: 'Australia',
       countries: ['Australia', 'New Zealand']
     },
     {
@@ -52,10 +52,10 @@ scoutApp.constant('countries', {
     }
   ]
 });
-scoutApp.service('constantsService', function(duration, playerTypes, countries) {
+scoutApp.service('constantsService', function(duration, playerTypes, regions) {
   this.duration = duration;
   this.playerTypes = playerTypes;
-  this.countries = countries;
+  this.regions = regions;
 });
 scoutApp.controller('MainCtrl', function($scope, constantsService) {
   $scope.duration = constantsService.duration;
@@ -70,10 +70,10 @@ scoutApp.controller('MainCtrl', function($scope, constantsService) {
   $scope.generateScout = function() {
     var duration = $scope.duration.types[Math.floor(Math.random() * $scope.duration.types.length)];
     var playerType = $scope.playerTypes.types[Math.floor(Math.random() * $scope.playerTypes.types.length)];
-    var continent = $scope.countries.continents[Math.floor(Math.random() * $scope.countries.continents.length)];
-    var country = continent.countries[Math.floor(Math.random() * continent.countries.length)];
+    var region = $scope.countries.regions[Math.floor(Math.random() * $scope.countries.regions.length)];
+    var country = region.countries[Math.floor(Math.random() * region.countries.length)];
     var result = {
-      continent: continent.name,
+      continent: region.name,
       country: country,
       playerType: playerType,
       duration: duration
@@ -81,3 +81,26 @@ scoutApp.controller('MainCtrl', function($scope, constantsService) {
     return result;
   }
 });
+
+function startElement(el) {
+  return {
+    value: el,
+    active: true
+  }
+}
+scoutApp.controller('scoutCtrl', ['constantsService', '$scope', '$cookies', function(constantsService, $scope, $cookies) {
+  // $scope.config = {
+  //   duration: constantsService.duration
+  // }
+  // $scope.time = $cookies.get('time') || 0;
+  // console.log(constantsService.duration.types);
+  $scope.config = {
+    duration: constantsService.duration.types.map(startElement),
+    playerTypes: constantsService.playerTypes.types.map(startElement),
+    regions: constantsService.regions.regions.map(startElement)
+  };
+
+  $scope.scouts = [{}, {}, {}];
+  // console.log($cookies.get('asdf'));
+  // console.log($cookies.put('asdf', 'Hello world'));
+}]);
