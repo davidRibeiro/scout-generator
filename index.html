@@ -10,11 +10,20 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/picnicss/6.3.2/picnic.min.css">
   <!-- Angular.js -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-  <!-- App script -->
+  <!-- Angular-cookies.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-cookies.min.js"></script>
 </head>
 
 <body ng-app="scoutApp">
-  <main ng-controller="MainCtrl" class="container">
+  <!-- <section ng-controller="MainCtrl">
+    <nav>
+      <a href="#" class="brand">Scout Generator</a>
+      <input id="bmenub" type="checkbox" class="show">
+      <label for="bmenub" class="burger pseudo button">&#8801;</label>
+      <div class="menu">
+        <a class="button pseudo" href="#config">Configuration</a>
+      </div>
+    </nav>
 
     <table class="" ng-show="results.length">
       <tbody>
@@ -32,10 +41,45 @@
     </div>
 
     <button ng-click="randomizeScout()" type="button" name="button">Randomize Scout</button>
+  </section> -->
+  <div ng-controller="scoutCtrl">
+    <section id="config">
+      <!-- Duration -->
+      <div ng-repeat="type in config.duration">
+        <label>
+          <input type="checkbox" ng-model="type.active">
+          <span class="checkable">{{type.value}}</span>
+        </label>
+      </div>
+      <!-- Region -->
+      <div ng-repeat="type in config.regions">
+        <label>
+          <input type="checkbox" ng-model="type.active">
+          <span class="checkable">{{type.value.name}}</span>
+        </label>
+      </div>
+      <!-- Player Types -->
+      <div ng-repeat="type in config.playerTypes">
+        <label ng-click="console.log('ola')">
+          <input type="checkbox" ng-model="type.active">
+          <span class="checkable">{{type.value}}</span>
+        </label>
+      </div>
+    </section>
 
-  </main>
+    <div ng-repeat="scout in scouts">
+      <span  ng-click="console.log('ola')">{{$index}}
+        </span>
+    </div>
+    <button ng-click="console.log()" ng-init="count=0">
+  Increment
+</button>
+<span>
+  count: {{count}}
+</span>
+  </div>
+  <!-- App script -->
   <script src="./scripts/app.js" charset="utf-8"></script>
-
 </body>
 
 </html>
