@@ -60,23 +60,17 @@
       </div>
       <!-- Player Types -->
       <div ng-repeat="type in config.playerTypes">
-        <label ng-click="console.log('ola')">
+        <label ng-click="">
           <input type="checkbox" ng-model="type.active">
           <span class="checkable">{{type.value}}</span>
         </label>
       </div>
     </section>
-
+    
     <div ng-repeat="scout in scouts">
-      <span  ng-click="console.log('ola')">{{$index}}
-        </span>
+      <span>{{$index}}</span>
     </div>
-    <button ng-click="console.log()" ng-init="count=0">
-  Increment
-</button>
-<span>
-  count: {{count}}
-</span>
+
   </div>
   <!-- App script -->
   <script src="./scripts/app.js" charset="utf-8"></script>
