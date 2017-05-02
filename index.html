@@ -44,33 +44,85 @@
   </section> -->
   <div ng-controller="scoutCtrl">
     <section id="config">
-      <!-- Duration -->
-      <div ng-repeat="type in config.duration">
-        <label>
-          <input type="checkbox" ng-model="type.active">
-          <span class="checkable">{{type.value}}</span>
-        </label>
-      </div>
+      <h2>Configurations</h2>
+
       <!-- Region -->
-      <div ng-repeat="type in config.regions">
-        <label>
+      <article class="card">
+        <header>
+          <h4>Regions</h4>
+        </header>
+        <footer>
+          <div class="flex one two-500 three-800">
+            <div ng-repeat="type in config.regions">
+              <label>
           <input type="checkbox" ng-model="type.active">
           <span class="checkable">{{type.value.name}}</span>
         </label>
-      </div>
+            </div>
+          </div>
+        </footer>
+      </article>
+
       <!-- Player Types -->
-      <div ng-repeat="type in config.playerTypes">
-        <label ng-click="">
+      <article class="card">
+        <header>
+          <h4>Player Types</h4>
+        </header>
+        <footer>
+          <div class="flex one two-500 three-800">
+            <div ng-repeat="type in config.playerTypes">
+              <label ng-click="">
           <input type="checkbox" ng-model="type.active">
           <span class="checkable">{{type.value}}</span>
         </label>
+            </div>
+          </div>
+        </footer>
+      </article>
+
+      <!-- Duration -->
+      <article class="card">
+        <header>
+          <h4>Durations</h4>
+        </header>
+        <footer>
+          <div class="flex three three-500 three-800">
+            <div ng-repeat="type in config.duration">
+              <label>
+          <input type="checkbox" ng-model="type.active">
+          <span class="checkable">{{type.value}} months</span>
+        </label>
+            </div>
+          </div>
+        </footer>
+
+    </section>
+
+    <section id="scouts">
+      <h2>Scouts</h2>
+      <div class="flex three three-500 three-800">
+        <div ng-repeat="scout in scouts">
+          <label>
+              <input type="checkbox"  ng-model="scout.active">
+              <span class="checkable">
+                <input type="text" ng-model="scout.name">
+              </span>
+            </label>
+          <div>
+            {{scout.history}}
+          </div>
+        </div>
       </div>
     </section>
-    
-    <div ng-repeat="scout in scouts">
-      <span>{{$index}}</span>
+
+    <div class="flex one one-500 two-800">
+      <button type="button" class="success" ng-click="generateAllScouts()">Generate</button>
+      <form ng-submit="clearCookies()">
+        <button type="submit" class="error">Reset</button>
+      </form>
     </div>
 
+    {{config.time}}
   </div>
   <!-- App script -->
   <script src="./scripts/app.js" charset="utf-8"></script>

@@ -88,29 +88,107 @@ function startElement(el) {
     active: true
   }
 }
-scoutApp.controller('scoutCtrl', ['constantsService', '$scope', '$cookies', function(constantsService, $scope, $cookies) {
-  $scope.config = $cookies.getObject('config');
-  if ($scope.config == undefined) {
-    $scope.config = {
-      duration: constantsService.duration.types.map(startElement),
-      playerTypes: constantsService.playerTypes.types.map(startElement),
-      regions: constantsService.regions.regions.map(startElement),
-      time: 0
-    };
 
-    $scope.scouts = [{}, {}, {}];
+function checkIfItIsActive(el) {
+  return (el.active == true);
+}
+
+scoutApp.controller('scoutCtrl', ['constantsService', '$scope', '$cookies', '$window', '$filter',
+  function(constantsService, $scope, $cookies, $window, $filter) {
+    $scope.config = $cookies.getObject('config');
+    if ($scope.config == undefined) {
+      $scope.config = {
+        duration: constantsService.duration.types.map(startElement),
+        playerTypes: constantsService.playerTypes.types.map(startElement),
+        regions: constantsService.regions.regions.map(startElement),
+        time: 0
+      };
+    }
+    $scope.scouts = $cookies.getObject('scouts');
+    if ($scope.scouts == undefined) {
+      $scope.scouts = [{
+        name: 'Scout #1',
+        active: true,
+        history: []
+      }, {
+        name: 'Scout #2',
+        active: true,
+        history: []
+
+      }, {
+        name: 'Scout #3',
+        active: true,
+        history: []
+      }];
+    }
+    // watch any config changes
+    $scope.$watch(function() {
+      return $scope.config;
+    }, function(newValue, oldValue) {
+      $cookies.putObject('config', newValue)
+    }, true)
+    // watch any scout changes
+    $scope.$watch(function() {
+      return $scope.scouts;
+    }, function(newValue, oldValue) {
+      $cookies.putObject('scouts', newValue)
+    }, true)
+    // delete cookies and restart app
+    $scope.clearCookies = function() {
+      $cookies.remove('scouts');
+      $cookies.remove('config');
+      $window.location.reload();
+    }
+
+    $scope.generateAllScouts = function() {
+
+      var months = $scope.config.duration.filter(checkIfItIsActive);
+      if (months.length <= 0) {
+        months = constantsService.duration.types.map(startElement);
+      }
+      var playerTypes = $scope.config.playerTypes.filter(checkIfItIsActive);
+      if (playerTypes.length <= 0) {
+        playerTypes = constantsService.playerTypes.types.map(startElement);
+      }
+      var regions = $scope.config.regions.filter(checkIfItIsActive);
+      if (regions.length <= 0) {
+        regions = constantsService.regions.regions.map(startElement);
+      }
+      var countries = regions[Math.floor(Math.random() * regions.length)].value.countries;
+
+      // check how many scouts are active
+      var nScoutsActive = $scope.scouts.filter(function(scout) {
+        return (scout.active == true);
+      }).length;
+      // if there is any scout active then generate a job for him
+      if (nScoutsActive > 0) {
+        var maxTime = 10;
+        for (var i = 0; i < $scope.scouts.length; i++) {
+          var scout = $scope.scouts[i];
+          var job = (scout.active == false) ? {} : $scope.generateJob(months, playerTypes, countries);
+          if (scout.active == true) {
+            maxTime = Math.min(maxTime, job.duration);
+          }
+          scout.history.push(job);
+        }
+        $scope.config.time += maxTime;
+      }
+      // otherwise we'll just wait three months
+      else {
+        $scope.config.time += 3;
+      }
+    }
+
+    // randomize job for a scout according to the configs
+    $scope.generateJob = function(months, playerTypes, countries) {
+      var job = {
+        country: countries[Math.floor(Math.random() * countries.length)],
+        playerType: playerTypes[Math.floor(Math.random() * playerTypes.length)].value,
+        duration: months[Math.floor(Math.random() * months.length)].value
+      };
+      return job;
+    }
+
+
   }
-  
-  $scope.$watch(function() {
-    return $scope.config;
-  }, function(newValue, oldValue) {
-    $cookies.putObject('config', newValue)
-  }, true)
-
-  $scope.$watch(function() {
-    return $scope.scouts;
-  }, function(newValue, oldValue) {
-    $cookies.putObject('scouts', newValue)
-  }, true)
-
-}]);
+]);
